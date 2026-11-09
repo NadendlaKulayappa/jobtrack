@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }} | JobTrack</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #0b1120;
+            color: #e5e7eb;
+            font-family: Arial, sans-serif;
+        }
+        .container { max-width: 800px; margin: auto; }
+        .card {
+            background: #111c30;
+            border: 1px solid #263449;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        label {
+            display: block;
+            margin: 16px 0 7px;
+            color: #c7d2fe;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #34445d;
+            border-radius: 7px;
+            background: #0b1120;
+            color: #e5e7eb;
+            font: inherit;
+        }
+        textarea { resize: vertical; }
+        .helptext {
+            display: block;
+            margin-top: 5px;
+            color: #9ca3af;
+            font-size: 13px;
+        }
+        .errorlist { color: #fca5a5; }
+        .btn {
+            display: inline-block;
+            padding: 11px 16px;
+            border-radius: 8px;
+            border: 0;
+            text-decoration: none;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .primary { background: #6366f1; color: white; }
+        .secondary { background: #273449; color: white; }
+        .muted { color: #9ca3af; }
+        @media (max-width: 600px) {
+            body { padding: 16px; }
+            .card { padding: 17px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>{{ page_title }}</h1>
+    <p class="muted">Enter the details for your interview preparation.</p>
+
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="helptext">{{ field.help_text }}</small>
+                    {% endif %}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+
+            <button class="btn primary" type="submit">Save Preparation</button>
+            <a class="btn secondary"
+               href="{% url 'interview_preparation_list' %}">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+</body>
+</html>

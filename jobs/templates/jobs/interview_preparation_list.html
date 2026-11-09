@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Preparation | JobTrack</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #0b1120;
+            color: #e5e7eb;
+            font-family: Arial, sans-serif;
+        }
+        .container { max-width: 1150px; margin: auto; }
+        h1 { margin-bottom: 8px; }
+        .muted { color: #9ca3af; }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: 0;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 3px;
+        }
+        .primary { background: #6366f1; color: white; }
+        .secondary { background: #273449; color: white; }
+        .danger { background: #7f1d1d; color: white; }
+        .ai-btn { background: #0f766e; color: white; }
+        .card {
+            background: #111c30;
+            border: 1px solid #263449;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        .field { overflow-wrap: anywhere; }
+        .field strong {
+            display: block;
+            color: #a5b4fc;
+            margin-bottom: 6px;
+        }
+        .notes {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            line-height: 1.6;
+        }
+        .answer-box {
+            background: #0b2630;
+            border: 1px solid #115e59;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 14px;
+        }
+        .answer-box h3 { color: #5eead4; margin-top: 0; }
+        .message {
+            background: #163b30;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        .empty { text-align: center; padding: 45px 15px; }
+        .hint { color: #a7f3d0; font-size: 13px; }
+        @media (max-width: 600px) {
+            body { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="topbar">
+        <div>
+            <h1>Interview Preparation</h1>
+            <p class="muted">
+                Organize interview rounds, questions, notes, and AI answers.
+            </p>
+        </div>
+        <div>
+            <a class="btn secondary" href="/">Dashboard</a>
+            <a class="btn primary"
+               href="{% url 'interview_preparation_create' %}">
+                + Add Preparation
+            </a>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% for item in preparations %}
+        <div class="card">
+            <h2>{{ item.application.company_name }} — {{ item.round_name }}</h2>
+            <p class="muted">{{ item.application.job_title }}</p>
+
+            <div class="grid">
+                <div class="field">
+                    <strong>Interview Date</strong>
+                    {{ item.scheduled_date|default:"Not scheduled" }}
+                </div>
+                <div class="field">
+                    <strong>Interview Type</strong>
+                    {{ item.interview_type|default:"Not specified" }}
+                </div>
+                <div class="field">
+                    <strong>Preparation Status</strong>
+                    {{ item.preparation_status }}
+                </div>
+                <div class="field">
+                    <strong>Outcome</strong>
+                    {{ item.outcome }}
+                </div>
+            </div>
+
+            {% if item.questions %}
+                <h3>Questions to Practise</h3>
+                <div class="notes">{{ item.questions }}</div>
+
+                <form method="post"
+                      action="{% url 'generate_interview_answer' item.pk %}"
+                      style="margin-top: 14px;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn ai-btn">
+                        ✨ Generate AI Answer
+                    </button>
+                </form>
+                <p class="hint">
+                    AI-generated answers may need verification before your interview.
+                </p>
+            {% else %}
+                <p class="muted">
+                    Add questions by editing this preparation record to generate an AI answer.
+                </p>
+            {% endif %}
+
+            {% if item.ai_answer %}
+                <div class="answer-box">
+                    <h3>✨ AI-Generated Answer</h3>
+                    <div class="notes">{{ item.ai_answer }}</div>
+                </div>
+            {% endif %}
+
+            {% if item.preparation_notes %}
+                <h3>Preparation Notes</h3>
+                <div class="notes">{{ item.preparation_notes }}</div>
+            {% endif %}
+
+            <div style="margin-top: 18px;">
+                <a class="btn secondary"
+                   href="{% url 'interview_preparation_edit' item.pk %}">
+                    Edit
+                </a>
+                <a class="btn danger"
+                   href="{% url 'interview_preparation_delete' item.pk %}">
+                    Delete
+                </a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="card empty">
+            <h2>No preparation records yet</h2>
+            <p class="muted">
+                Add your first interview round and start preparing.
+            </p>
+            <a class="btn primary"
+               href="{% url 'interview_preparation_create' %}">
+                Create Preparation Record
+            </a>
+        </div>
+    {% endfor %}
+</div>
+</body>
+</html>

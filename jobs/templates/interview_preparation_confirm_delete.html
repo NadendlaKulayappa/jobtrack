@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Preparation | JobTrack</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #0b1120;
+            color: #e5e7eb;
+            font-family: Arial, sans-serif;
+        }
+        .card {
+            max-width: 550px;
+            margin: 60px auto;
+            padding: 25px;
+            background: #111c30;
+            border: 1px solid #263449;
+            border-radius: 12px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 11px 16px;
+            border: 0;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            margin: 12px 5px 0 0;
+        }
+        .danger { background: #b91c1c; color: white; }
+        .secondary { background: #273449; color: white; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Delete Preparation Record?</h1>
+        <p>
+            Are you sure you want to delete the preparation record for
+            <strong>{{ preparation.application.company_name }}</strong>
+            — {{ preparation.round_name }}?
+        </p>
+        <p>This will delete only this preparation record.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn danger">
+                Yes, Delete
+            </button>
+            <a class="btn secondary"
+               href="{% url 'interview_preparation_list' %}">
+                Cancel
+            </a>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }} | JobTrack</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #0f172a;
+            color: #f8fafc;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 30px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 14px;
+        }
+
+        h1 { color: #60a5fa; }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #475569;
+            border-radius: 7px;
+            background: #0f172a;
+            color: white;
+        }
+
+        .helptext {
+            display: block;
+            margin-top: 5px;
+            color: #94a3b8;
+        }
+
+        .errorlist { color: #fca5a5; }
+
+        button, .back {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 7px;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+        }
+
+        .back {
+            background: #334155;
+            color: white;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>{{ page_title }}</h1>
+        <p>Enter the details of your job application.</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.help_text %}
+                    <small class="helptext">{{ field.help_text }}</small>
+                {% endif %}
+
+                {{ field.errors }}
+            {% endfor %}
+
+            <button type="submit">Save Application</button>
+            <a href="{% url 'home' %}" class="back">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>
